@@ -5,27 +5,54 @@
  */
 
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import RadioGroup from '@material-ui/core/RadioGroup';
 
-function HomePage() {
+import Product from './components/Product';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  fab: {
+    margin: theme.spacing(1),
+  },
+  btnIcon: {
+    marginRight: theme.spacing(1),
+  },
+}));
+
+export default function HomePage() {
+  const classes = useStyles();
+  const [values, setValues] = React.useState({
+    selectedProductId: "1",
+  });
+  const handleChange = name => event => {
+    setValues({ ...values, [name]: event.target.value });
+  };
 
   return (
-    <article>
-      <Helmet>
-        <title>Home Page</title>
-        <meta
-          name="description"
-          content="A React.js Boilerplate application homepage"
-        />
-      </Helmet>
-      <div>
-        <Button variant="contained" color="primary">
-          Hello World
-        </Button>
-      </div>
-    </article>
+    <div className={classes.root}>
+      <RadioGroup
+        value={values.selectedProductId}
+        onChange={handleChange('selectedProductId')}
+      >
+        <Grid container spacing={3}>
+          <Product productId="1" />
+          <Product productId="2" />
+
+          <Grid item xs={12}>
+            <Fab variant="extended" aria-label="Delete" className={classes.fab}>
+              <AddIcon className={classes.btnIcon} />
+              Add Product
+            </Fab>
+          </Grid>
+        </Grid>
+      </RadioGroup>
+    </div>
   );
 }
 
-export default HomePage;

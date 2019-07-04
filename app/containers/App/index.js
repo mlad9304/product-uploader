@@ -8,26 +8,17 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet';
-import styled from 'styled-components';
 import { Switch, Route } from 'react-router-dom';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 
 import HomePage from 'containers/HomePage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
-import GlobalStyle from '../../global-styles';
-
-const AppWrapper = styled.div`
-  max-width: calc(768px + 16px * 2);
-  margin: 0 auto;
-  display: flex;
-  min-height: 100%;
-  padding: 0 16px;
-  flex-direction: column;
-`;
-
 export default function App() {
   return (
-    <AppWrapper>
+    <React.Fragment>
       <Helmet
         titleTemplate="%s - Product Uploader"
         defaultTitle="Product Uploader"
@@ -37,11 +28,18 @@ export default function App() {
           content="A product uploader application with desktop and mobile"
         />
       </Helmet>
-      <Switch>
-        <Route exact path="/" component={HomePage} />
-        <Route path="" component={NotFoundPage} />
-      </Switch>
-      <GlobalStyle />
-    </AppWrapper>
+      <CssBaseline />
+
+      <Container>
+        <Box mt={5}>
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route path="" component={NotFoundPage} />
+          </Switch>
+        </Box>
+      </Container>
+
+
+    </React.Fragment>
   );
 }
