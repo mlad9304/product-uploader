@@ -1,6 +1,8 @@
 /* eslint consistent-return:0 import/order:0 */
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const logger = require('./logger');
 
 const argv = require('./argv');
@@ -13,6 +15,10 @@ const ngrok =
     : false;
 const { resolve } = require('path');
 const app = express();
+
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
@@ -40,6 +46,8 @@ app.listen(port, host, async err => {
   if (err) {
     return logger.error(err.message);
   }
+
+  require('./db');
 
   // Connect to ngrok in dev mode
   if (ngrok) {

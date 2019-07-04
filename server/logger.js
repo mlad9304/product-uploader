@@ -10,8 +10,17 @@ const divider = chalk.gray('\n-----------------------------------');
  */
 const logger = {
   // Called whenever there's an error on the server we want to print
+  info: info => {
+    console.log(info);
+  },
   error: err => {
     console.error(chalk.red(err));
+  },
+
+  dbConnected: (uri, env) => {
+    console.log(
+      `Successfully connected to ${chalk.magenta(uri)} MongoDB cluster in ${chalk.magenta(env)} mode.`,
+    );
   },
 
   // Called when express.js app starts on given port w/o errors
