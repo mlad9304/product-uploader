@@ -1,5 +1,8 @@
 /* eslint consistent-return:0 import/order:0 */
 
+
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -22,6 +25,9 @@ app.use(bodyParser.json());
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
+fs.readdirSync(path.join(__dirname, 'routes')).map(file => {
+  require('./routes/' + file)(app);
+});
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {
