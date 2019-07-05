@@ -3,8 +3,13 @@
  */
 
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { LOAD_PRODUCTS } from 'containers/App/constants';
-import { productsLoaded, productsLoadingError } from 'containers/App/actions';
+import { LOAD_PRODUCTS, ADD_PRODUCT } from 'containers/App/constants';
+import {
+  productsLoaded,
+  productsLoadingError,
+  productAdded,
+  productAddingError,
+} from 'containers/App/actions';
 
 import request from 'utils/request';
 import globalConfig from 'global-config';
@@ -30,6 +35,18 @@ export function* getProducts() {
   }
 }
 
+export function* addProduct() {
+  const requestURL = `${globalConfig.baseUrl}/api/products`;
+
+  try {
+    // Call our request helper (see 'utils/request')
+    const product = yield call(request, requestURL, { method: 'POST' });
+    yield put(productAdded(product));
+  } catch (err) {
+    yield put(productAddingError(err));
+  }
+}
+
 /**
  * Root saga manages watcher lifecycle
  */
@@ -39,4 +56,5 @@ export default function* githubData() {
   // It returns task descriptor (just like fork) so we can continue execution
   // It will be cancelled automatically on component unmount
   yield takeLatest(LOAD_PRODUCTS, getProducts);
+  yield takeLatest(ADD_PRODUCT, addProduct);
 }

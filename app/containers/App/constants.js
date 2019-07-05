@@ -13,3 +13,7 @@ export const LOAD_PRODUCTS = 'product_uploader/App/LOAD_PRODUCTS';
 export const LOAD_PRODUCTS_SUCCESS =
   'product_uploader/App/LOAD_PRODUCTS_SUCCESS';
 export const LOAD_PRODUCTS_ERROR = 'product_uploader/App/LOAD_PRODUCTS_ERROR';
+
+export const ADD_PRODUCT = 'product_uploader/App/ADD_PRODUCT';
+export const ADD_PRODUCT_SUCCESS = 'product_uploader/App/ADD_PRODUCT_SUCCESS';
+export const ADD_PRODUCT_ERROR = 'product_uploader/App/ADD_PRODUCT_ERROR';

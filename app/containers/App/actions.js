@@ -19,6 +19,9 @@ import {
   LOAD_PRODUCTS,
   LOAD_PRODUCTS_SUCCESS,
   LOAD_PRODUCTS_ERROR,
+  ADD_PRODUCT,
+  ADD_PRODUCT_SUCCESS,
+  ADD_PRODUCT_ERROR,
 } from './constants';
 
 /**
@@ -56,6 +59,26 @@ export function productsLoaded(products) {
 export function productsLoadingError(error) {
   return {
     type: LOAD_PRODUCTS_ERROR,
+    error,
+  };
+}
+
+export function addProduct() {
+  return {
+    type: ADD_PRODUCT,
+  };
+}
+
+export function productAdded(product) {
+  return {
+    type: ADD_PRODUCT_SUCCESS,
+    product,
+  };
+}
+
+export function productAddingError(error) {
+  return {
+    type: ADD_PRODUCT_ERROR,
     error,
   };
 }

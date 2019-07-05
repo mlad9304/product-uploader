@@ -12,6 +12,9 @@ import {
   LOAD_PRODUCTS,
   LOAD_PRODUCTS_SUCCESS,
   LOAD_PRODUCTS_ERROR,
+  ADD_PRODUCT,
+  ADD_PRODUCT_SUCCESS,
+  ADD_PRODUCT_ERROR,
 } from './constants';
 
 // The initial state of the App
@@ -37,6 +40,21 @@ const appReducer = (state = initialState, action) =>
         break;
 
       case LOAD_PRODUCTS_ERROR:
+        draft.error = action.error;
+        draft.loading = false;
+        break;
+
+      case ADD_PRODUCT:
+        draft.loading = true;
+        draft.error = false;
+        break;
+
+      case ADD_PRODUCT_SUCCESS:
+        draft.products = [...draft.products, action.product];
+        draft.loading = false;
+        break;
+
+      case ADD_PRODUCT_ERROR:
         draft.error = action.error;
         draft.loading = false;
         break;
