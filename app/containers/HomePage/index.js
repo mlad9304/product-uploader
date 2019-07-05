@@ -4,14 +4,33 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React from 'react';
+import React, { useEffect, memo } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RadioGroup from '@material-ui/core/RadioGroup';
 
+import { useInjectReducer } from 'utils/injectReducer';
+import { useInjectSaga } from 'utils/injectSaga';
+import {
+  makeSelectProducts,
+  makeSelectLoading,
+  makeSelectError,
+} from 'containers/App/selectors';
 import Product from './components/Product';
+import ProductList from './components/ProductList';
+import { loadProducts } from '../App/actions';
+import { changeSelectedProductId } from './actions';
+import reducer from './reducer';
+import saga from './saga';
+import { makeSelectSelectedProductId } from './selectors';
+
+const key = 'home';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,24 +44,30 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function HomePage() {
+export function HomePage({
+  products,
+  selectedProductId,
+  onLoadProducts,
+  onChangeSelectedProductId,
+}) {
+  useInjectReducer({ key, reducer });
+  useInjectSaga({ key, saga });
+
+  useEffect(() => {
+    // When initial state username is not null, submit the form to load repos
+    onLoadProducts();
+  }, []);
+
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-    selectedProductId: "1",
-  });
-  const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
-  };
 
   return (
     <div className={classes.root}>
       <RadioGroup
-        value={values.selectedProductId}
-        onChange={handleChange('selectedProductId')}
+        value={selectedProductId}
+        onChange={onChangeSelectedProductId}
       >
         <Grid container spacing={3}>
-          <Product productId="1" />
-          <Product productId="2" />
+          <ProductList products={products} />
 
           <Grid item xs={12}>
             <Fab variant="extended" aria-label="Delete" className={classes.fab}>
@@ -56,3 +81,36 @@ export default function HomePage() {
   );
 }
 
+HomePage.propTypes = {
+  products: PropTypes.oneOfType([PropTypes.array, PropTypes.bool]),
+  selectedProductId: PropTypes.string,
+  onLoadProducts: PropTypes.func,
+  onChangeSelectedProductId: PropTypes.func,
+};
+
+const mapStateToProps = createStructuredSelector({
+  products: makeSelectProducts(),
+  selectedProductId: makeSelectSelectedProductId(),
+  loading: makeSelectLoading(),
+  error: makeSelectError(),
+});
+
+export function mapDispatchToProps(dispatch) {
+  return {
+    onLoadProducts: () => {
+      dispatch(loadProducts());
+    },
+    onChangeSelectedProductId: event =>
+      dispatch(changeSelectedProductId(event.target.value)),
+  };
+}
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+
+export default compose(
+  withConnect,
+  memo,
+)(HomePage);

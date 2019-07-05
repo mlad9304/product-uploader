@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -29,13 +30,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Product({ productId }) {
+export default function Product({ product }) {
+  const {
+    _id: productId,
+    productName,
+    variable1,
+    variable2,
+    variable3,
+    variable4,
+  } = product;
   const classes = useStyles();
-  const [values, setValues] = React.useState({
-
-  });
+  const [values, setValues] = React.useState({});
   const handleChange = name => event => {
-    console.log(name, event.target.value)
     setValues({ ...values, [name]: event.target.value });
   };
 
@@ -51,6 +57,7 @@ export default function Product({ productId }) {
             InputLabelProps={{
               shrink: true,
             }}
+            value={productName}
             onChange={handleChange('product_name')}
           />
           <TextField
@@ -60,6 +67,7 @@ export default function Product({ productId }) {
             InputLabelProps={{
               shrink: true,
             }}
+            value={variable1}
           />
           <TextField
             label="Variable 2"
@@ -68,6 +76,7 @@ export default function Product({ productId }) {
             InputLabelProps={{
               shrink: true,
             }}
+            value={variable2}
           />
           <TextField
             label="Variable 3"
@@ -76,6 +85,7 @@ export default function Product({ productId }) {
             InputLabelProps={{
               shrink: true,
             }}
+            value={variable3}
           />
           <TextField
             label="Variable 4"
@@ -84,9 +94,14 @@ export default function Product({ productId }) {
             InputLabelProps={{
               shrink: true,
             }}
+            value={variable4}
           />
         </form>
       </Paper>
     </Grid>
   );
 }
+
+Product.propTypes = {
+  product: PropTypes.object,
+};
