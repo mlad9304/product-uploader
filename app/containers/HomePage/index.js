@@ -14,6 +14,8 @@ import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Box from '@material-ui/core/Box';
+import { push } from 'connected-react-router';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -50,6 +52,7 @@ export function HomePage({
   onChangeSelectedProductId,
   onAddProduct,
   onUpdateProduct,
+  onNext,
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -70,17 +73,31 @@ export function HomePage({
         <Grid container spacing={3}>
           <ProductList products={products} onUpdateProduct={onUpdateProduct} />
 
-          <Grid item xs={12}>
-            <Fab
-              variant="extended"
-              aria-label="Delete"
-              className={classes.fab}
-              onClick={onAddProduct}
-            >
-              <AddIcon className={classes.btnIcon} />
-              Add Product
-            </Fab>
-          </Grid>
+          <div style={{ width: '100%' }}>
+            <Box display="flex" xs={12}>
+              <Box flexGrow={1}>
+                <Fab
+                  variant="extended"
+                  aria-label="Delete"
+                  className={classes.fab}
+                  onClick={onAddProduct}
+                >
+                  <AddIcon className={classes.btnIcon} />
+                  Add Product
+                </Fab>
+              </Box>
+              <Box>
+                <Fab
+                  variant="extended"
+                  aria-label="Delete"
+                  className={classes.fab}
+                  onClick={() => onNext(selectedProductId)}
+                >
+                  Next
+                </Fab>
+              </Box>
+            </Box>
+          </div>
         </Grid>
       </RadioGroup>
     </div>
@@ -94,6 +111,7 @@ HomePage.propTypes = {
   onChangeSelectedProductId: PropTypes.func,
   onAddProduct: PropTypes.func,
   onUpdateProduct: PropTypes.func,
+  onNext: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -112,6 +130,7 @@ export function mapDispatchToProps(dispatch) {
       dispatch(changeSelectedProductId(event.target.value)),
     onAddProduct: () => dispatch(addProduct()),
     onUpdateProduct: product => dispatch(updateProduct(product)),
+    onNext: productId => dispatch(push(`/products/${productId}`)),
   };
 }
 
