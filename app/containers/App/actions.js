@@ -22,6 +22,9 @@ import {
   ADD_PRODUCT,
   ADD_PRODUCT_SUCCESS,
   ADD_PRODUCT_ERROR,
+  UPDATE_PRODUCT,
+  UPDATE_PRODUCT_SUCCESS,
+  UPDATE_PRODUCT_ERROR,
 } from './constants';
 
 /**
@@ -79,6 +82,27 @@ export function productAdded(product) {
 export function productAddingError(error) {
   return {
     type: ADD_PRODUCT_ERROR,
+    error,
+  };
+}
+
+export function updateProduct(product) {
+  return {
+    type: UPDATE_PRODUCT,
+    product,
+  };
+}
+
+export function productUpdated(product) {
+  return {
+    type: UPDATE_PRODUCT_SUCCESS,
+    product,
+  };
+}
+
+export function productUpdatingError(error) {
+  return {
+    type: UPDATE_PRODUCT_ERROR,
     error,
   };
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -30,20 +30,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function Product({ product }) {
-  const {
-    _id: productId,
-    productName,
-    variable1,
-    variable2,
-    variable3,
-    variable4,
-  } = product;
+export default function Product({ product, onUpdateProduct }) {
   const classes = useStyles();
-  const [values, setValues] = React.useState({});
+  const [state, setState] = useState({
+    ...product,
+  });
   const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
+    const newState = { ...state, [name]: event.target.value };
+    setState(newState);
+    onUpdateProduct(newState);
   };
+  const { _id: productId } = state;
 
   return (
     <Grid item xs={12} className={classes.root}>
@@ -57,8 +54,8 @@ export default function Product({ product }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={productName}
-            onChange={handleChange('product_name')}
+            value={state.productName}
+            onChange={handleChange('productName')}
           />
           <TextField
             label="Variable 1"
@@ -67,7 +64,8 @@ export default function Product({ product }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={variable1}
+            value={state.variable1}
+            onChange={handleChange('variable1')}
           />
           <TextField
             label="Variable 2"
@@ -76,7 +74,8 @@ export default function Product({ product }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={variable2}
+            value={state.variable2}
+            onChange={handleChange('variable2')}
           />
           <TextField
             label="Variable 3"
@@ -85,7 +84,8 @@ export default function Product({ product }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={variable3}
+            value={state.variable3}
+            onChange={handleChange('variable3')}
           />
           <TextField
             label="Variable 4"
@@ -94,7 +94,8 @@ export default function Product({ product }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={variable4}
+            value={state.variable4}
+            onChange={handleChange('variable4')}
           />
         </form>
       </Paper>
@@ -104,4 +105,5 @@ export default function Product({ product }) {
 
 Product.propTypes = {
   product: PropTypes.object,
+  onUpdateProduct: PropTypes.func,
 };

@@ -23,7 +23,7 @@ import {
   makeSelectError,
 } from 'containers/App/selectors';
 import ProductList from './components/ProductList';
-import { loadProducts, addProduct } from '../App/actions';
+import { loadProducts, addProduct, updateProduct } from '../App/actions';
 import { changeSelectedProductId } from './actions';
 import reducer from './reducer';
 import saga from './saga';
@@ -49,6 +49,7 @@ export function HomePage({
   onLoadProducts,
   onChangeSelectedProductId,
   onAddProduct,
+  onUpdateProduct,
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
@@ -67,7 +68,7 @@ export function HomePage({
         onChange={onChangeSelectedProductId}
       >
         <Grid container spacing={3}>
-          <ProductList products={products} />
+          <ProductList products={products} onUpdateProduct={onUpdateProduct} />
 
           <Grid item xs={12}>
             <Fab
@@ -92,6 +93,7 @@ HomePage.propTypes = {
   onLoadProducts: PropTypes.func,
   onChangeSelectedProductId: PropTypes.func,
   onAddProduct: PropTypes.func,
+  onUpdateProduct: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -109,6 +111,7 @@ export function mapDispatchToProps(dispatch) {
     onChangeSelectedProductId: event =>
       dispatch(changeSelectedProductId(event.target.value)),
     onAddProduct: () => dispatch(addProduct()),
+    onUpdateProduct: product => dispatch(updateProduct(product)),
   };
 }
 

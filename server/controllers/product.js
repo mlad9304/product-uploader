@@ -27,3 +27,22 @@ exports.post = (req, res) => {
       res.status(500).send(err);
     });
 };
+
+exports.put = (req, res) => {
+  const data = req.body || {};
+  const { _id: productId, ...rest } = data;
+
+  Product.findByIdAndUpdate(productId, { ...rest }, { new: true })
+    // eslint-disable-next-line consistent-return
+    .then(product => {
+      if (!product) {
+        return res.sendStatus(404);
+      }
+
+      res.json(product);
+    })
+    .catch(err => {
+      logger.error(err);
+      res.status(422).send(err.errors);
+    });
+};
