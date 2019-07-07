@@ -130,7 +130,10 @@ export function mapDispatchToProps(dispatch) {
       dispatch(changeSelectedProductId(event.target.value)),
     onAddProduct: () => dispatch(addProduct()),
     onUpdateProduct: product => dispatch(updateProduct(product)),
-    onNext: productId => dispatch(push(`/products/${productId}`)),
+    onNext: productId => {
+      if (productId && productId !== '')
+        dispatch(push(`/products/${productId}`));
+    },
   };
 }
 

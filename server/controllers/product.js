@@ -1,5 +1,9 @@
+require('isomorphic-fetch');
+const { Dropbox } = require('dropbox');
 const Product = require('../models/product');
 const logger = require('../logger');
+const config = require('../config');
+const dropbox = new Dropbox({ accessToken: config.dropbox.accessToken });
 
 exports.list = (req, res) => {
   const query = req.query || {};
@@ -20,7 +24,14 @@ exports.post = (req, res) => {
 
   Product.create(data)
     .then(product => {
-      res.json(product);
+      const { _id: productId } = product;
+      dropbox
+        .filesCreateFolder({ path: `/${productId}` })
+        .then(() => res.json(product))
+        .catch(err => {
+          logger.error(err);
+          res.status(500).send(err);
+        });
     })
     .catch(err => {
       logger.error(err);

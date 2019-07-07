@@ -1,6 +1,5 @@
 /* eslint consistent-return:0 import/order:0 */
 
-
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -20,13 +19,15 @@ const { resolve } = require('path');
 const app = express();
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(bodyParser.json());
 
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
+// eslint-disable-next-line array-callback-return
 fs.readdirSync(path.join(__dirname, 'routes')).map(file => {
-  require('./routes/' + file)(app);
+  // eslint-disable-next-line global-require
+  require(`./routes/${file}`)(app);
 });
 
 // In production we need to pass these values in instead of relying on webpack
@@ -53,6 +54,7 @@ app.listen(port, host, async err => {
     return logger.error(err.message);
   }
 
+  // eslint-disable-next-line global-require
   require('./db');
 
   // Connect to ngrok in dev mode

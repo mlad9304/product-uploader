@@ -25,6 +25,9 @@ import {
   UPDATE_PRODUCT,
   UPDATE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_ERROR,
+  UPLOAD_FILE,
+  UPLOAD_FILE_SUCCESS,
+  UPLOAD_FILE_ERROR,
 } from './constants';
 
 /**
@@ -103,6 +106,28 @@ export function productUpdated(product) {
 export function productUpdatingError(error) {
   return {
     type: UPDATE_PRODUCT_ERROR,
+    error,
+  };
+}
+
+export function uploadFile(file, productId) {
+  return {
+    type: UPLOAD_FILE,
+    file,
+    productId,
+  };
+}
+
+export function fileUploaded(file) {
+  return {
+    type: UPLOAD_FILE_SUCCESS,
+    file,
+  };
+}
+
+export function fileUploadingError(error) {
+  return {
+    type: UPLOAD_FILE_ERROR,
     error,
   };
 }

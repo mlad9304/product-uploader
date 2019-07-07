@@ -5,4 +5,7 @@ module.exports = {
   database: {
     uri: process.env.MONGODB_URI,
   },
+  dropbox: {
+    accessToken: process.env.DROPBOX_ACCESS_TOKEN,
+  },
 };

@@ -16,6 +16,8 @@ import { ConnectedRouter } from 'connected-react-router';
 import FontFaceObserver from 'fontfaceobserver';
 import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
+// eslint-disable-next-line import/no-unresolved
+import '../node_modules/video-react/dist/video-react.css';
 
 // Import root app
 import App from 'containers/App';

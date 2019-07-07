@@ -2,11 +2,12 @@
  * Gets the products
  */
 
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import {
   LOAD_PRODUCTS,
   ADD_PRODUCT,
   UPDATE_PRODUCT,
+  UPLOAD_FILE,
 } from 'containers/App/constants';
 import {
   productsLoaded,
@@ -15,11 +16,14 @@ import {
   productAddingError,
   productUpdated,
   productUpdatingError,
+  fileUploaded,
+  fileUploadingError,
 } from 'containers/App/actions';
 
 import request from 'utils/request';
 import globalConfig from 'global-config';
 import { changeSelectedProductId } from './actions';
+import { makeSelectSelectedProductId } from './selectors';
 
 /**
  * Github repos request/response handler
@@ -71,10 +75,38 @@ export function* updateProduct(payload) {
   }
 }
 
+export function* uploadFile(payload) {
+  const productId = yield select(makeSelectSelectedProductId());
+
+  try {
+    const file = yield call(
+      request,
+      'https://content.dropboxapi.com/2/files/upload',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'Dropbox-API-Arg': JSON.stringify({
+            path: `/${productId}/${payload.file.name}`,
+            mode: 'add',
+            autorename: true,
+            mute: false,
+            strict_conflict: false,
+          }),
+          Authorization: `Bearer ${globalConfig.dropboxAccessKey}`,
+        },
+        body: payload.file,
+      },
+    );
+    yield put(fileUploaded(file));
+  } catch (err) {
+    yield put(fileUploadingError(err));
+  }
+}
 /**
  * Root saga manages watcher lifecycle
  */
-export default function* githubData() {
+export default function* productData() {
   // Watches for LOAD_REPOS actions and calls getRepos when one comes in.
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
@@ -82,4 +114,5 @@ export default function* githubData() {
   yield takeLatest(LOAD_PRODUCTS, getProducts);
   yield takeLatest(ADD_PRODUCT, addProduct);
   yield takeLatest(UPDATE_PRODUCT, updateProduct);
+  yield takeLatest(UPLOAD_FILE, uploadFile);
 }

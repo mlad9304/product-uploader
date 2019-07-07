@@ -10,22 +10,23 @@ import Box from '@material-ui/core/Box';
 import { push } from 'connected-react-router';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { Player } from 'video-react';
 
-import tileData from './tileData';
+import { useInjectReducer } from 'utils/injectReducer';
+import { useInjectSaga } from 'utils/injectSaga';
 
-import { makeSelectSelectedProductId } from '../HomePage/selectors';
 import { makeSelectLoading, makeSelectError } from '../App/selectors';
+import { makeSelectFiles } from './selectors';
+import { uploadFile } from '../App/actions';
+import { changeLocalImage } from './actions';
+import reducer from './reducer';
+import saga from './saga';
+
+const key = 'productDetail';
 
 const useStyles = makeStyles(theme => ({
   media: {
@@ -37,12 +38,38 @@ const useStyles = makeStyles(theme => ({
   btnIcon: {
     marginRight: theme.spacing(1),
   },
+  input: {
+    display: 'none',
+  },
 }));
 
-function ProductDetail({ width, onPrev, onNext }) {
+function ProductDetail({
+  files,
+  width,
+  match,
+  onUploadFile,
+  onChangeLocalImage,
+  onPrev,
+  onNext,
+}) {
+  useInjectReducer({ key, reducer });
+  useInjectSaga({ key, saga });
+  const { productId } = match.params;
   const classes = useStyles();
   // eslint-disable-next-line no-nested-ternary
   const columns = width === 'xs' || width === 'sm' ? 1 : width === 'md' ? 2 : 3;
+
+  const handleCapture = index => event => {
+    const fileReader = new FileReader();
+
+    const file = event.target.files[0];
+    onUploadFile(file, productId);
+
+    fileReader.readAsDataURL(file);
+    fileReader.onload = e => {
+      onChangeLocalImage(e.target.result, index);
+    };
+  };
 
   return (
     <div>
@@ -55,23 +82,29 @@ function ProductDetail({ width, onPrev, onNext }) {
         <GridListTile key="Subheader" style={{ height: 'auto' }} cols={columns}>
           <ListSubheader component="div">December</ListSubheader>
         </GridListTile>
-        {tileData.map(tile => (
-          <GridListTile>
+        {files.map(file => (
+          <GridListTile key={file.index}>
             <Card className={classes.card}>
-              <CardActionArea>
-                <CardMedia
-                  className={classes.media}
-                  image={tile.img}
-                  title={tile.title}
+              {file.index < 5 && (
+                <CardMedia className={classes.media} image={file.img} />
+              )}
+              {file.index === 5 && (
+                <Player
+                  playsInline
+                  poster="/alt-video.jpg"
+                  src={file.img}
+                  fluid={false}
+                  width="100%"
+                  height={300}
                 />
-              </CardActionArea>
+              )}
               <CardActions>
-                <Button size="small" color="primary">
-                  Upload
-                </Button>
-                <Button size="small" color="primary">
-                  Capture
-                </Button>
+                <input
+                  accept={file.index < 5 ? 'image/*' : 'video/*'}
+                  id={`icon-button-photo-${file.index}`}
+                  onChange={handleCapture(file.index)}
+                  type="file"
+                />
               </CardActions>
             </Card>
           </GridListTile>
@@ -106,19 +139,26 @@ function ProductDetail({ width, onPrev, onNext }) {
 }
 
 ProductDetail.propTypes = {
+  files: PropTypes.array,
   width: PropTypes.string,
+  match: PropTypes.object,
+  onUploadFile: PropTypes.func,
+  onChangeLocalImage: PropTypes.func,
   onPrev: PropTypes.func,
   onNext: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
-  selectedProductId: makeSelectSelectedProductId(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
+  files: makeSelectFiles(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
+    onUploadFile: (file, productId) => dispatch(uploadFile(file, productId)),
+    onChangeLocalImage: (image, index) =>
+      dispatch(changeLocalImage(image, index)),
     onPrev: () => dispatch(push('/')),
     onNext: () => dispatch(push('/form')),
   };
