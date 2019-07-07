@@ -177,7 +177,7 @@ function mapDispatchToProps(dispatch) {
       dispatch(changeLocalImage(image, index)),
     onInitFiles: () => dispatch(initFiles()),
     onPrev: () => dispatch(push('/')),
-    onNext: () => dispatch(push('/form')),
+    onNext: () => dispatch(push('/userinfo')),
   };
 }
 

@@ -41,7 +41,7 @@ exports.post = (req, res) => {
 
 exports.put = (req, res) => {
   const data = req.body || {};
-  const { _id: productId, ...rest } = data;
+  const { _id: productId, createdAt, updatedAt, ...rest } = data;
 
   Product.findByIdAndUpdate(productId, { ...rest }, { new: true })
     // eslint-disable-next-line consistent-return

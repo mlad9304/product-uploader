@@ -50,7 +50,9 @@ const appReducer = (state = initialState, action) =>
         break;
 
       case ADD_PRODUCT_SUCCESS:
-        draft.products = [...draft.products, action.product];
+        if (draft.products)
+          draft.products = [...draft.products, action.product];
+        else draft.products = [action.product];
         draft.loading = false;
         break;
 

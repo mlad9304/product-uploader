@@ -30,3 +30,8 @@ export const UPLOAD_FILE_ERROR = 'product_uploader/App/UPLOAD_FILE_ERROR';
 export const GET_PRODUCT = 'product_uploader/App/GET_PRODUCT';
 export const GET_PRODUCT_SUCCESS = 'product_uploader/App/GET_PRODUCT_SUCCESS';
 export const GET_PRODUCT_ERROR = 'product_uploader/App/GET_PRODUCT_ERROR';
+
+export const POST_USER_INFO = 'product_uploader/App/POST_USER_INFO';
+export const POST_USER_INFO_SUCCESS =
+  'product_uploader/App/POST_USER_INFO_SUCCESS';
+export const POST_USER_INFO_ERROR = 'product_uploader/App/POST_USER_INFO_ERROR';
