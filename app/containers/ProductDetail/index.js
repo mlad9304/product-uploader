@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -20,9 +20,9 @@ import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 
 import { makeSelectLoading, makeSelectError } from '../App/selectors';
-import { makeSelectFiles } from './selectors';
-import { uploadFile } from '../App/actions';
-import { changeLocalImage } from './actions';
+import { makeSelectFiles, makeSelectProductDetailInfo } from './selectors';
+import { uploadFile, getProduct } from '../App/actions';
+import { changeLocalImage, initFiles } from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -44,17 +44,26 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function ProductDetail({
+  info,
   files,
   width,
   match,
+  onGetProduct,
   onUploadFile,
   onChangeLocalImage,
+  onInitFiles,
   onPrev,
   onNext,
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
   const { productId } = match.params;
+
+  useEffect(() => {
+    onGetProduct(productId);
+    onInitFiles();
+  }, []);
+
   const classes = useStyles();
   // eslint-disable-next-line no-nested-ternary
   const columns = width === 'xs' || width === 'sm' ? 1 : width === 'md' ? 2 : 3;
@@ -80,7 +89,9 @@ function ProductDetail({
         spacing={10}
       >
         <GridListTile key="Subheader" style={{ height: 'auto' }} cols={columns}>
-          <ListSubheader component="div">December</ListSubheader>
+          <ListSubheader component="div">
+            {info && info.productName}
+          </ListSubheader>
         </GridListTile>
         {files.map(file => (
           <GridListTile key={file.index}>
@@ -139,16 +150,20 @@ function ProductDetail({
 }
 
 ProductDetail.propTypes = {
+  info: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   files: PropTypes.array,
   width: PropTypes.string,
   match: PropTypes.object,
+  onGetProduct: PropTypes.func,
   onUploadFile: PropTypes.func,
   onChangeLocalImage: PropTypes.func,
+  onInitFiles: PropTypes.func,
   onPrev: PropTypes.func,
   onNext: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
+  info: makeSelectProductDetailInfo(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
   files: makeSelectFiles(),
@@ -156,9 +171,11 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
+    onGetProduct: productId => dispatch(getProduct(productId)),
     onUploadFile: (file, productId) => dispatch(uploadFile(file, productId)),
     onChangeLocalImage: (image, index) =>
       dispatch(changeLocalImage(image, index)),
+    onInitFiles: () => dispatch(initFiles()),
     onPrev: () => dispatch(push('/')),
     onNext: () => dispatch(push('/form')),
   };

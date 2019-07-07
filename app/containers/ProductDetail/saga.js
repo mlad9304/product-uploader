@@ -3,11 +3,29 @@
  */
 
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { UPLOAD_FILE } from 'containers/App/constants';
-import { fileUploaded, fileUploadingError } from 'containers/App/actions';
+import { UPLOAD_FILE, GET_PRODUCT } from 'containers/App/constants';
+import {
+  fileUploaded,
+  fileUploadingError,
+  getProductSuccess,
+  productGettingError,
+} from 'containers/App/actions';
 
 import request from 'utils/request';
 import globalConfig from 'global-config';
+
+export function* getProduct(payload) {
+  const { productId } = payload;
+  const requestURL = `${globalConfig.baseUrl}/api/products/${productId}`;
+
+  try {
+    // Call our request helper (see 'utils/request')
+    const product = yield call(request, requestURL);
+    yield put(getProductSuccess(product));
+  } catch (err) {
+    yield put(productGettingError(err));
+  }
+}
 
 export function* uploadFile(payload) {
   const { productId, file } = payload;
@@ -45,5 +63,6 @@ export default function* productDetailData() {
   // By using `takeLatest` only the result of the latest API call is applied.
   // It returns task descriptor (just like fork) so we can continue execution
   // It will be cancelled automatically on component unmount
+  yield takeLatest(GET_PRODUCT, getProduct);
   yield takeLatest(UPLOAD_FILE, uploadFile);
 }

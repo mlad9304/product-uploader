@@ -25,14 +25,6 @@ const ProductSchema = new Schema(
       type: Number,
       default: 0,
     },
-    images: {
-      type: Schema.Types.Mixed,
-      default: [],
-    },
-    video: {
-      type: String,
-      trim: true,
-    },
   },
   { collection: 'products' },
 );

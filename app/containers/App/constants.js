@@ -26,3 +26,7 @@ export const UPDATE_PRODUCT_ERROR = 'product_uploader/App/UPDATE_PRODUCT_ERROR';
 export const UPLOAD_FILE = 'product_uploader/App/UPLOAD_FILE';
 export const UPLOAD_FILE_SUCCESS = 'product_uploader/App/UPLOAD_FILE_SUCCESS';
 export const UPLOAD_FILE_ERROR = 'product_uploader/App/UPLOAD_FILE_ERROR';
+
+export const GET_PRODUCT = 'product_uploader/App/GET_PRODUCT';
+export const GET_PRODUCT_SUCCESS = 'product_uploader/App/GET_PRODUCT_SUCCESS';
+export const GET_PRODUCT_ERROR = 'product_uploader/App/GET_PRODUCT_ERROR';

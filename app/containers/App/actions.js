@@ -28,6 +28,9 @@ import {
   UPLOAD_FILE,
   UPLOAD_FILE_SUCCESS,
   UPLOAD_FILE_ERROR,
+  GET_PRODUCT,
+  GET_PRODUCT_SUCCESS,
+  GET_PRODUCT_ERROR,
 } from './constants';
 
 /**
@@ -128,6 +131,27 @@ export function fileUploaded(file) {
 export function fileUploadingError(error) {
   return {
     type: UPLOAD_FILE_ERROR,
+    error,
+  };
+}
+
+export function getProduct(productId) {
+  return {
+    type: GET_PRODUCT,
+    productId,
+  };
+}
+
+export function getProductSuccess(product) {
+  return {
+    type: GET_PRODUCT_SUCCESS,
+    product,
+  };
+}
+
+export function productGettingError(error) {
+  return {
+    type: GET_PRODUCT_ERROR,
     error,
   };
 }

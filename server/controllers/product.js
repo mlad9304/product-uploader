@@ -57,3 +57,14 @@ exports.put = (req, res) => {
       res.status(422).send(err.errors);
     });
 };
+
+exports.get = (req, res) => {
+  Product.findById(req.params.productId)
+    .then(product => {
+      res.json(product);
+    })
+    .catch(err => {
+      logger.error(err);
+      res.status(422).send(err.errors);
+    });
+};
