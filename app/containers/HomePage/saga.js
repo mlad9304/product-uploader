@@ -3,11 +3,9 @@
  */
 
 import { call, put, takeLatest } from 'redux-saga/effects';
-import {
-  LOAD_PRODUCTS,
-  ADD_PRODUCT,
-  UPDATE_PRODUCT,
-} from 'containers/App/constants';
+import request from 'utils/request';
+import globalConfig from 'global-config';
+
 import {
   productsLoaded,
   productsLoadingError,
@@ -16,9 +14,12 @@ import {
   productUpdated,
   productUpdatingError,
 } from 'containers/App/actions';
+import {
+  LOAD_PRODUCTS,
+  ADD_PRODUCT,
+  UPDATE_PRODUCT,
+} from 'containers/App/constants';
 
-import request from 'utils/request';
-import globalConfig from 'global-config';
 import { changeSelectedProductId } from './actions';
 
 /**

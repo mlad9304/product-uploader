@@ -3,6 +3,8 @@ import { CHANGE_SELECTED_PRODUCT_ID } from './constants';
 
 // The initial state of the App
 export const initialState = {
+  loading: false,
+  error: false,
   selectedProductId: '',
 };
 

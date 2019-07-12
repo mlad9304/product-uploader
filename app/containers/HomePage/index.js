@@ -20,12 +20,16 @@ import { push } from 'connected-react-router';
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 import {
-  makeSelectProducts,
   makeSelectLoading,
   makeSelectError,
+  makeSelectProducts,
 } from 'containers/App/selectors';
+import {
+  loadProducts,
+  addProduct,
+  updateProduct,
+} from 'containers/App/actions';
 import ProductList from './components/ProductList';
-import { loadProducts, addProduct, updateProduct } from '../App/actions';
 import { changeSelectedProductId } from './actions';
 import reducer from './reducer';
 import saga from './saga';

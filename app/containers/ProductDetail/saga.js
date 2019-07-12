@@ -2,7 +2,7 @@
  * Gets the products
  */
 
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, all, takeLatest } from 'redux-saga/effects';
 import { UPLOAD_FILE, GET_PRODUCT } from 'containers/App/constants';
 import {
   fileUploaded,
@@ -13,6 +13,8 @@ import {
 
 import request from 'utils/request';
 import globalConfig from 'global-config';
+import { getDropboxFilesSuccess, getDropboxFilesError } from './actions';
+import { GET_DROPBOX_FILES } from './constants';
 
 export function* getProduct(payload) {
   const { productId } = payload;
@@ -55,6 +57,50 @@ export function* uploadFile(payload) {
     yield put(fileUploadingError(err));
   }
 }
+export function* getDropboxFiles(payload) {
+  const { productId } = payload;
+
+  try {
+    const dropBoxFiles = yield call(
+      request,
+      'https://api.dropboxapi.com/2/files/list_folder',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${globalConfig.dropboxAccessKey}`,
+        },
+        body: JSON.stringify({
+          path: `/${productId}`,
+          recursive: false,
+          include_media_info: false,
+          include_deleted: false,
+          include_has_explicit_shared_members: false,
+          include_mounted_folders: true,
+          include_non_downloadable_files: true,
+        }),
+      },
+    );
+    const { entries } = dropBoxFiles;
+    const dropboxFilelinks = yield all(
+      entries.map(file =>
+        call(request, 'https://api.dropboxapi.com/2/files/get_temporary_link', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${globalConfig.dropboxAccessKey}`,
+          },
+          body: JSON.stringify({
+            path: `${file.path_lower}`,
+          }),
+        }),
+      ),
+    );
+    yield put(getDropboxFilesSuccess(dropboxFilelinks));
+  } catch (err) {
+    yield put(getDropboxFilesError(err));
+  }
+}
 /**
  * Root saga manages watcher lifecycle
  */
@@ -65,4 +111,5 @@ export default function* productDetailData() {
   // It will be cancelled automatically on component unmount
   yield takeLatest(GET_PRODUCT, getProduct);
   yield takeLatest(UPLOAD_FILE, uploadFile);
+  yield takeLatest(GET_DROPBOX_FILES, getDropboxFiles);
 }

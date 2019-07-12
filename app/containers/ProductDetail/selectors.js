@@ -9,10 +9,21 @@ const makeSelectProductDetailInfo = () =>
     productDetailState => productDetailState.info,
   );
 
-const makeSelectFiles = () =>
+const makeSelectDropboxImages = () =>
   createSelector(
     selectProductDetail,
-    productDetailState => productDetailState.files,
+    productDetailState => productDetailState.dropboxImages,
   );
 
-export { selectProductDetail, makeSelectProductDetailInfo, makeSelectFiles };
+const makeSelectDropboxVideo = () =>
+  createSelector(
+    selectProductDetail,
+    productDetailState => productDetailState.dropboxVideo,
+  );
+
+export {
+  selectProductDetail,
+  makeSelectProductDetailInfo,
+  makeSelectDropboxImages,
+  makeSelectDropboxVideo,
+};

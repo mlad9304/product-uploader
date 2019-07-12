@@ -20,9 +20,13 @@ import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 
 import { makeSelectLoading, makeSelectError } from '../App/selectors';
-import { makeSelectFiles, makeSelectProductDetailInfo } from './selectors';
+import {
+  makeSelectProductDetailInfo,
+  makeSelectDropboxImages,
+  makeSelectDropboxVideo,
+} from './selectors';
 import { uploadFile, getProduct } from '../App/actions';
-import { changeLocalImage, initFiles } from './actions';
+import { initFiles, getDropboxFiles } from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -45,13 +49,14 @@ const useStyles = makeStyles(theme => ({
 
 function ProductDetail({
   info,
-  files,
   width,
   match,
+  dropboxImages,
+  dropboxVideo,
   onGetProduct,
   onUploadFile,
-  onChangeLocalImage,
   onInitFiles,
+  onGetDropboxFiles,
   onPrev,
   onNext,
 }) {
@@ -62,23 +67,32 @@ function ProductDetail({
   useEffect(() => {
     onGetProduct(productId);
     onInitFiles();
+    onGetDropboxFiles(productId);
   }, []);
 
   const classes = useStyles();
   // eslint-disable-next-line no-nested-ternary
   const columns = width === 'xs' || width === 'sm' ? 1 : width === 'md' ? 2 : 3;
 
-  const handleCapture = index => event => {
-    const fileReader = new FileReader();
-
+  const handleCapture = event => {
     const file = event.target.files[0];
     onUploadFile(file, productId);
-
-    fileReader.readAsDataURL(file);
-    fileReader.onload = e => {
-      onChangeLocalImage(e.target.result, index);
-    };
   };
+
+  const dropboxImagesLength = dropboxImages ? 5 - dropboxImages.length : 5;
+  const emptyImages = [];
+  for (let i = 0; i < dropboxImagesLength; i += 1) {
+    emptyImages.push(
+      <GridListTile key={i}>
+        <Card className={classes.card}>
+          <CardMedia className={classes.media} image="/alt.jpg" />
+          <CardActions>
+            <input accept="image/*" type="file" onChange={handleCapture} />
+          </CardActions>
+        </Card>
+      </GridListTile>,
+    );
+  }
 
   return (
     <div>
@@ -93,33 +107,49 @@ function ProductDetail({
             {info && info.productName}
           </ListSubheader>
         </GridListTile>
-        {files.map(file => (
-          <GridListTile key={file.index}>
+        {dropboxImages &&
+          dropboxImages.map(image => (
+            <GridListTile key={image.id}>
+              <Card className={classes.card}>
+                <CardMedia className={classes.media} image={image.link} />
+                <CardActions>
+                  <input
+                    accept="image/*"
+                    type="file"
+                    onChange={handleCapture}
+                  />
+                </CardActions>
+              </Card>
+            </GridListTile>
+          ))}
+        {emptyImages}
+        {dropboxVideo && (
+          <GridListTile>
             <Card className={classes.card}>
-              {file.index < 5 && (
-                <CardMedia className={classes.media} image={file.img} />
-              )}
-              {file.index === 5 && (
-                <Player
-                  playsInline
-                  poster="/alt-video.jpg"
-                  src={file.img}
-                  fluid={false}
-                  width="100%"
-                  height={300}
-                />
-              )}
+              <Player
+                playsInline
+                poster="/alt-video.jpg"
+                src={dropboxVideo.link}
+                fluid={false}
+                width="100%"
+                height={300}
+              />
               <CardActions>
-                <input
-                  accept={file.index < 5 ? 'image/*' : 'video/*'}
-                  id={`icon-button-photo-${file.index}`}
-                  onChange={handleCapture(file.index)}
-                  type="file"
-                />
+                <input accept="video/*" type="file" onChange={handleCapture} />
               </CardActions>
             </Card>
           </GridListTile>
-        ))}
+        )}
+        {!dropboxVideo && (
+          <GridListTile>
+            <Card className={classes.card}>
+              <CardMedia className={classes.media} image="/alt-video.jpg" />
+              <CardActions>
+                <input accept="video/*" type="file" onChange={handleCapture} />
+              </CardActions>
+            </Card>
+          </GridListTile>
+        )}
       </GridList>
       <div style={{ width: '100%' }}>
         <Box display="flex" xs={12} my={3}>
@@ -151,13 +181,14 @@ function ProductDetail({
 
 ProductDetail.propTypes = {
   info: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
-  files: PropTypes.array,
+  dropboxImages: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
+  dropboxVideo: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   width: PropTypes.string,
   match: PropTypes.object,
   onGetProduct: PropTypes.func,
   onUploadFile: PropTypes.func,
-  onChangeLocalImage: PropTypes.func,
   onInitFiles: PropTypes.func,
+  onGetDropboxFiles: PropTypes.func,
   onPrev: PropTypes.func,
   onNext: PropTypes.func,
 };
@@ -166,16 +197,16 @@ const mapStateToProps = createStructuredSelector({
   info: makeSelectProductDetailInfo(),
   loading: makeSelectLoading(),
   error: makeSelectError(),
-  files: makeSelectFiles(),
+  dropboxImages: makeSelectDropboxImages(),
+  dropboxVideo: makeSelectDropboxVideo(),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     onGetProduct: productId => dispatch(getProduct(productId)),
     onUploadFile: (file, productId) => dispatch(uploadFile(file, productId)),
-    onChangeLocalImage: (image, index) =>
-      dispatch(changeLocalImage(image, index)),
     onInitFiles: () => dispatch(initFiles()),
+    onGetDropboxFiles: productId => dispatch(getDropboxFiles(productId)),
     onPrev: () => dispatch(push('/')),
     onNext: () => dispatch(push('/userinfo')),
   };

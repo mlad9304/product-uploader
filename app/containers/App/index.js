@@ -15,8 +15,8 @@ import Box from '@material-ui/core/Box';
 
 import HomePage from 'containers/HomePage/Loadable';
 import ProductDetail from 'containers/ProductDetail/Loadable';
+import UserInfo from 'containers/UserInfo/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
-import UserInfo from '../UserInfo';
 
 export default function App() {
   return (

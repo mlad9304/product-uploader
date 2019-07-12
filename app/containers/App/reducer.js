@@ -27,6 +27,7 @@ export const initialState = {
 /* eslint-disable default-case, no-param-reassign */
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
+    // eslint-disable-next-line no-empty
     switch (action.type) {
       case LOAD_PRODUCTS:
         draft.loading = true;

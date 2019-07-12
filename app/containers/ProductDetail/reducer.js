@@ -1,36 +1,12 @@
 import produce from 'immer';
-import { CHANGE_LOCAL_IMAGE, INIT_FILES } from './constants';
+import { INIT_FILES, GET_DROPBOX_FILES_SUCCESS } from './constants';
 import { GET_PRODUCT_SUCCESS } from '../App/constants';
 
 // The initial state of the App
 export const initialState = {
   info: false,
-  files: [
-    {
-      img: '/alt.jpg',
-      index: 0,
-    },
-    {
-      img: '/alt.jpg',
-      index: 1,
-    },
-    {
-      img: '/alt.jpg',
-      index: 2,
-    },
-    {
-      img: '/alt.jpg',
-      index: 3,
-    },
-    {
-      img: '/alt.jpg',
-      index: 4,
-    },
-    {
-      img: '/alt-video.jpg',
-      index: 5,
-    },
-  ],
+  dropboxImages: false,
+  dropboxVideo: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
@@ -40,17 +16,31 @@ const productDetailReducer = (state = initialState, action) =>
       case GET_PRODUCT_SUCCESS:
         draft.info = action.product;
         break;
-      case CHANGE_LOCAL_IMAGE:
-        // eslint-disable-next-line no-case-declarations
-        // draft.files = draft.files.map(file =>
-        //   file.index === action.index
-        //     ? { img: action.image, index: action.index }
-        //     : file,
-        // );
-        draft.files[action.index].img = action.image;
-        break;
       case INIT_FILES:
-        draft.files = initialState.files;
+        draft.dropboxImages = initialState.dropboxImages;
+        draft.dropboxVideo = initialState.dropboxVideo;
+        break;
+      case GET_DROPBOX_FILES_SUCCESS:
+        // eslint-disable-next-line no-case-declarations
+        const images = [];
+        // eslint-disable-next-line no-case-declarations
+        const video = {};
+        action.dropboxFiles.forEach(file => {
+          if (/\.(gif|jpg|jpeg|tiff|png)$/i.test(file.metadata.name))
+            images.push(
+              Object.assign(
+                {},
+                { id: file.metadata.content_hash, link: file.link },
+              ),
+            );
+          else
+            Object.assign(video, {
+              id: file.metadata.content_hash,
+              link: file.link,
+            });
+        });
+        draft.dropboxImages = images;
+        draft.dropboxVideo = video;
         break;
     }
   });
