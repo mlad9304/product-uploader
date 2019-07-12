@@ -13,6 +13,7 @@ import {
   fileUploadingError,
   getProductSuccess,
   productGettingError,
+  getDropboxFiles,
 } from './actions';
 import { UPLOAD_FILE, GET_PRODUCT, GET_DROPBOX_FILES } from './constants';
 
@@ -53,11 +54,12 @@ export function* uploadFile(payload) {
       },
     );
     yield put(fileUploaded(uploadedFile));
+    yield put(getDropboxFiles(productId));
   } catch (err) {
     yield put(fileUploadingError(err));
   }
 }
-export function* getDropboxFiles(payload) {
+export function* getDropboxFilesHandler(payload) {
   const { productId } = payload;
 
   try {
@@ -111,5 +113,5 @@ export default function* productDetailData() {
   // It will be cancelled automatically on component unmount
   yield takeLatest(GET_PRODUCT, getProduct);
   yield takeLatest(UPLOAD_FILE, uploadFile);
-  yield takeLatest(GET_DROPBOX_FILES, getDropboxFiles);
+  yield takeLatest(GET_DROPBOX_FILES, getDropboxFilesHandler);
 }

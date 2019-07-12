@@ -6,19 +6,25 @@
  * contain code that should be seen on all pages. (e.g. navigation bar)
  */
 
-import React from 'react';
+import React, { memo } from 'react';
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
 import { Switch, Route } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import HomePage from 'containers/HomePage/Loadable';
 import ProductDetail from 'containers/ProductDetail/Loadable';
 import UserInfo from 'containers/UserInfo/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
+import { makeSelectLoading } from './selectors';
 
-export default function App() {
+function App({ loading }) {
   return (
     <React.Fragment>
       <Helmet
@@ -31,7 +37,7 @@ export default function App() {
         />
       </Helmet>
       <CssBaseline />
-
+      {loading && <LinearProgress />}
       <Container>
         <Box mt={5}>
           <Switch>
@@ -45,3 +51,21 @@ export default function App() {
     </React.Fragment>
   );
 }
+
+App.propTypes = {
+  loading: PropTypes.bool,
+};
+
+const mapStateToProps = createStructuredSelector({
+  loading: makeSelectLoading(),
+});
+
+const withConnect = connect(
+  mapStateToProps,
+  null,
+);
+
+export default compose(
+  withConnect,
+  memo,
+)(App);

@@ -9,6 +9,15 @@
 
 import produce from 'immer';
 import {
+  GET_PRODUCT,
+  UPLOAD_FILE,
+  GET_DROPBOX_FILES,
+  UPLOAD_FILE_SUCCESS,
+  UPLOAD_FILE_ERROR,
+  GET_DROPBOX_FILES_ERROR,
+  GET_DROPBOX_FILES_SUCCESS,
+} from 'containers/ProductDetail/constants';
+import {
   LOAD_PRODUCTS,
   LOAD_PRODUCTS_SUCCESS,
   LOAD_PRODUCTS_ERROR,
@@ -59,6 +68,19 @@ const appReducer = (state = initialState, action) =>
 
       case ADD_PRODUCT_ERROR:
         draft.error = action.error;
+        draft.loading = false;
+        break;
+
+      case GET_PRODUCT:
+      case UPLOAD_FILE:
+      case GET_DROPBOX_FILES:
+        draft.loading = true;
+        break;
+
+      case UPLOAD_FILE_SUCCESS:
+      case UPLOAD_FILE_ERROR:
+      case GET_DROPBOX_FILES_SUCCESS:
+      case GET_DROPBOX_FILES_ERROR:
         draft.loading = false;
         break;
     }

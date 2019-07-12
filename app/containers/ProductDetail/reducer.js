@@ -43,7 +43,7 @@ const productDetailReducer = (state = initialState, action) =>
             });
         });
         draft.dropboxImages = images;
-        draft.dropboxVideo = video;
+        draft.dropboxVideo = Object.keys(video).length > 0 ? video : false;
         break;
     }
   });

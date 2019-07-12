@@ -15,6 +15,8 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import { Player } from 'video-react';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
@@ -35,9 +37,7 @@ const useStyles = makeStyles(theme => ({
   media: {
     height: 300,
   },
-  fab: {
-    margin: theme.spacing(1),
-  },
+  fab: {},
   btnIcon: {
     marginRight: theme.spacing(1),
   },
@@ -86,7 +86,24 @@ function ProductDetail({
         <Card className={classes.card}>
           <CardMedia className={classes.media} image="/alt.jpg" />
           <CardActions>
-            <input accept="image/*" type="file" onChange={handleCapture} />
+            <input
+              accept="image/*"
+              type="file"
+              onChange={handleCapture}
+              className={classes.input}
+              id={`button-empty-image-${i}`}
+            />
+            <label htmlFor={`button-empty-image-${i}`}>
+              <Fab
+                color="primary"
+                aria-label="Add"
+                className={classes.fab}
+                component="span"
+                size="small"
+              >
+                <AddIcon />
+              </Fab>
+            </label>
           </CardActions>
         </Card>
       </GridListTile>,
@@ -114,9 +131,31 @@ function ProductDetail({
                 <CardActions>
                   <input
                     accept="image/*"
+                    className={classes.input}
                     type="file"
+                    id={`button-file-${image.id}`}
                     onChange={handleCapture}
                   />
+                  <label htmlFor={`button-file-${image.id}`}>
+                    <Fab
+                      color="primary"
+                      aria-label="Add"
+                      className={classes.fab}
+                      component="span"
+                      size="small"
+                    >
+                      <AddIcon />
+                    </Fab>
+                  </label>
+                  <Fab
+                    color="secondary"
+                    aria-label="Delete"
+                    className={classes.fab}
+                    component="span"
+                    size="small"
+                  >
+                    <DeleteIcon />
+                  </Fab>
                 </CardActions>
               </Card>
             </GridListTile>
@@ -134,7 +173,33 @@ function ProductDetail({
                 height={300}
               />
               <CardActions>
-                <input accept="video/*" type="file" onChange={handleCapture} />
+                <input
+                  accept="video/*"
+                  type="file"
+                  onChange={handleCapture}
+                  className={classes.input}
+                  id={`button-file-${dropboxVideo.id}`}
+                />
+                <label htmlFor={`button-file-${dropboxVideo.id}`}>
+                  <Fab
+                    color="primary"
+                    aria-label="Add"
+                    className={classes.fab}
+                    component="span"
+                    size="small"
+                  >
+                    <AddIcon />
+                  </Fab>
+                </label>
+                <Fab
+                  color="secondary"
+                  aria-label="Delete"
+                  className={classes.fab}
+                  component="span"
+                  size="small"
+                >
+                  <DeleteIcon />
+                </Fab>
               </CardActions>
             </Card>
           </GridListTile>
@@ -144,7 +209,24 @@ function ProductDetail({
             <Card className={classes.card}>
               <CardMedia className={classes.media} image="/alt-video.jpg" />
               <CardActions>
-                <input accept="video/*" type="file" onChange={handleCapture} />
+                <input
+                  accept="video/*"
+                  type="file"
+                  onChange={handleCapture}
+                  id="button-empty-video"
+                  className={classes.input}
+                />
+                <label htmlFor="button-empty-video">
+                  <Fab
+                    color="primary"
+                    aria-label="Add"
+                    className={classes.fab}
+                    component="span"
+                    size="small"
+                  >
+                    <AddIcon />
+                  </Fab>
+                </label>
               </CardActions>
             </Card>
           </GridListTile>
