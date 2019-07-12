@@ -1,6 +1,9 @@
 import produce from 'immer';
-import { INIT_FILES, GET_DROPBOX_FILES_SUCCESS } from './constants';
-import { GET_PRODUCT_SUCCESS } from '../App/constants';
+import {
+  INIT_FILES,
+  GET_DROPBOX_FILES_SUCCESS,
+  GET_PRODUCT_SUCCESS,
+} from './constants';
 
 // The initial state of the App
 export const initialState = {

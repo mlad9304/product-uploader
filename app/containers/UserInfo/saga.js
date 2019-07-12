@@ -3,11 +3,11 @@
  */
 
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { POST_USER_INFO } from 'containers/App/constants';
-import { userInfoPosted, userInfoPostingError } from 'containers/App/actions';
 
 import request from 'utils/request';
 import globalConfig from 'global-config';
+import { userInfoPosted, userInfoPostingError } from './actions';
+import { POST_USER_INFO } from './constants';
 
 export function* postUserInfo(payload) {
   const requestURL = `${globalConfig.baseUrl}/api/users`;

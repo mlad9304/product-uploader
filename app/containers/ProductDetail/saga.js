@@ -3,18 +3,18 @@
  */
 
 import { call, put, all, takeLatest } from 'redux-saga/effects';
-import { UPLOAD_FILE, GET_PRODUCT } from 'containers/App/constants';
+
+import request from 'utils/request';
+import globalConfig from 'global-config';
 import {
+  getDropboxFilesSuccess,
+  getDropboxFilesError,
   fileUploaded,
   fileUploadingError,
   getProductSuccess,
   productGettingError,
-} from 'containers/App/actions';
-
-import request from 'utils/request';
-import globalConfig from 'global-config';
-import { getDropboxFilesSuccess, getDropboxFilesError } from './actions';
-import { GET_DROPBOX_FILES } from './constants';
+} from './actions';
+import { UPLOAD_FILE, GET_PRODUCT, GET_DROPBOX_FILES } from './constants';
 
 export function* getProduct(payload) {
   const { productId } = payload;

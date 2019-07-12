@@ -25,8 +25,7 @@ import {
   makeSelectDropboxImages,
   makeSelectDropboxVideo,
 } from './selectors';
-import { uploadFile, getProduct } from '../App/actions';
-import { initFiles, getDropboxFiles } from './actions';
+import { initFiles, getDropboxFiles, uploadFile, getProduct } from './actions';
 import reducer from './reducer';
 import saga from './saga';
 

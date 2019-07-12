@@ -12,7 +12,7 @@ import Fab from '@material-ui/core/Fab';
 import Box from '@material-ui/core/Box';
 import { useInjectSaga } from 'utils/injectSaga';
 import { makeSelectProducts } from '../App/selectors';
-import { postUserInfo } from '../App/actions';
+import { postUserInfo } from './actions';
 import saga from './saga';
 
 const key = 'userInfo';

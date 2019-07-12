@@ -25,15 +25,6 @@ import {
   UPDATE_PRODUCT,
   UPDATE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_ERROR,
-  UPLOAD_FILE,
-  UPLOAD_FILE_SUCCESS,
-  UPLOAD_FILE_ERROR,
-  GET_PRODUCT,
-  GET_PRODUCT_SUCCESS,
-  GET_PRODUCT_ERROR,
-  POST_USER_INFO,
-  POST_USER_INFO_SUCCESS,
-  POST_USER_INFO_ERROR,
 } from './constants';
 
 export function loadProducts() {
@@ -93,70 +84,6 @@ export function productUpdated(product) {
 export function productUpdatingError(error) {
   return {
     type: UPDATE_PRODUCT_ERROR,
-    error,
-  };
-}
-
-export function uploadFile(file, productId) {
-  return {
-    type: UPLOAD_FILE,
-    file,
-    productId,
-  };
-}
-
-export function fileUploaded(file) {
-  return {
-    type: UPLOAD_FILE_SUCCESS,
-    file,
-  };
-}
-
-export function fileUploadingError(error) {
-  return {
-    type: UPLOAD_FILE_ERROR,
-    error,
-  };
-}
-
-export function getProduct(productId) {
-  return {
-    type: GET_PRODUCT,
-    productId,
-  };
-}
-
-export function getProductSuccess(product) {
-  return {
-    type: GET_PRODUCT_SUCCESS,
-    product,
-  };
-}
-
-export function productGettingError(error) {
-  return {
-    type: GET_PRODUCT_ERROR,
-    error,
-  };
-}
-
-export function postUserInfo(userInfo) {
-  return {
-    type: POST_USER_INFO,
-    userInfo,
-  };
-}
-
-export function userInfoPosted(userInfo) {
-  return {
-    type: POST_USER_INFO_SUCCESS,
-    userInfo,
-  };
-}
-
-export function userInfoPostingError(error) {
-  return {
-    type: POST_USER_INFO_ERROR,
     error,
   };
 }

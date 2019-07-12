@@ -1,5 +1,11 @@
 import {
   INIT_FILES,
+  UPLOAD_FILE,
+  UPLOAD_FILE_SUCCESS,
+  UPLOAD_FILE_ERROR,
+  GET_PRODUCT,
+  GET_PRODUCT_SUCCESS,
+  GET_PRODUCT_ERROR,
   GET_DROPBOX_FILES,
   GET_DROPBOX_FILES_SUCCESS,
   GET_DROPBOX_FILES_ERROR,
@@ -8,6 +14,49 @@ import {
 export function initFiles() {
   return {
     type: INIT_FILES,
+  };
+}
+
+export function uploadFile(file, productId) {
+  return {
+    type: UPLOAD_FILE,
+    file,
+    productId,
+  };
+}
+
+export function fileUploaded(file) {
+  return {
+    type: UPLOAD_FILE_SUCCESS,
+    file,
+  };
+}
+
+export function fileUploadingError(error) {
+  return {
+    type: UPLOAD_FILE_ERROR,
+    error,
+  };
+}
+
+export function getProduct(productId) {
+  return {
+    type: GET_PRODUCT,
+    productId,
+  };
+}
+
+export function getProductSuccess(product) {
+  return {
+    type: GET_PRODUCT_SUCCESS,
+    product,
+  };
+}
+
+export function productGettingError(error) {
+  return {
+    type: GET_PRODUCT_ERROR,
+    error,
   };
 }
 
