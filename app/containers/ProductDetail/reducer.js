@@ -33,13 +33,18 @@ const productDetailReducer = (state = initialState, action) =>
             images.push(
               Object.assign(
                 {},
-                { id: file.metadata.content_hash, link: file.link },
+                {
+                  id: file.metadata.content_hash,
+                  link: file.link,
+                  filePath: file.metadata.path_display,
+                },
               ),
             );
           else
             Object.assign(video, {
               id: file.metadata.content_hash,
               link: file.link,
+              filePath: file.metadata.path_display,
             });
         });
         draft.dropboxImages = images;

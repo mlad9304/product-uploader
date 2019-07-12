@@ -14,8 +14,15 @@ import {
   getProductSuccess,
   productGettingError,
   getDropboxFiles,
+  deleteFileSuccess,
+  deleteFileError,
 } from './actions';
-import { UPLOAD_FILE, GET_PRODUCT, GET_DROPBOX_FILES } from './constants';
+import {
+  UPLOAD_FILE,
+  GET_PRODUCT,
+  GET_DROPBOX_FILES,
+  DELETE_FILE,
+} from './constants';
 
 export function* getProduct(payload) {
   const { productId } = payload;
@@ -103,6 +110,30 @@ export function* getDropboxFilesHandler(payload) {
     yield put(getDropboxFilesError(err));
   }
 }
+export function* deleteFile(payload) {
+  const { filePath, productId } = payload;
+
+  try {
+    const deletedFile = yield call(
+      request,
+      'https://api.dropboxapi.com/2/files/delete_v2',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${globalConfig.dropboxAccessKey}`,
+        },
+        body: JSON.stringify({
+          path: filePath,
+        }),
+      },
+    );
+    yield put(deleteFileSuccess(deletedFile));
+    yield put(getDropboxFiles(productId));
+  } catch (err) {
+    yield put(deleteFileError(err));
+  }
+}
 /**
  * Root saga manages watcher lifecycle
  */
@@ -114,4 +145,5 @@ export default function* productDetailData() {
   yield takeLatest(GET_PRODUCT, getProduct);
   yield takeLatest(UPLOAD_FILE, uploadFile);
   yield takeLatest(GET_DROPBOX_FILES, getDropboxFilesHandler);
+  yield takeLatest(DELETE_FILE, deleteFile);
 }

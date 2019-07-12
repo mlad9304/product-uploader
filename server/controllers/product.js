@@ -68,3 +68,14 @@ exports.get = (req, res) => {
       res.status(422).send(err.errors);
     });
 };
+
+exports.delete = (req, res) => {
+  Product.findByIdAndDelete(req.params.productId)
+    .then(product => {
+      res.json(product);
+    })
+    .catch(err => {
+      logger.error(err);
+      res.status(422).send(err.errors);
+    });
+};

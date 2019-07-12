@@ -2,22 +2,26 @@
  * Gets the products
  */
 
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, all, takeLatest } from 'redux-saga/effects';
 import request from 'utils/request';
 import globalConfig from 'global-config';
 
 import {
+  loadProducts,
   productsLoaded,
   productsLoadingError,
   productAdded,
   productAddingError,
   productUpdated,
   productUpdatingError,
+  deleteProductSuccess,
+  deleteProductError,
 } from 'containers/App/actions';
 import {
   LOAD_PRODUCTS,
   ADD_PRODUCT,
   UPDATE_PRODUCT,
+  DELETE_PRODUCT,
 } from 'containers/App/constants';
 
 import { changeSelectedProductId } from './actions';
@@ -72,6 +76,39 @@ export function* updateProduct(payload) {
   }
 }
 
+export function* deleteProduct(payload) {
+  const { productId } = payload;
+  const requestURL = `${globalConfig.baseUrl}/api/products/${productId}`;
+
+  try {
+    // Call our request helper (see 'utils/request')
+    const [deletedProduct, deletedDropboxProduct] = yield all([
+      call(request, requestURL, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
+      call(request, 'https://api.dropboxapi.com/2/files/delete_v2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${globalConfig.dropboxAccessKey}`,
+        },
+        body: JSON.stringify({
+          path: `/${productId}`,
+        }),
+      }),
+    ]);
+    yield put(
+      deleteProductSuccess(productId, deletedProduct, deletedDropboxProduct),
+    );
+    yield put(loadProducts());
+  } catch (err) {
+    yield put(deleteProductError(err));
+  }
+}
+
 /**
  * Root saga manages watcher lifecycle
  */
@@ -83,4 +120,5 @@ export default function* productData() {
   yield takeLatest(LOAD_PRODUCTS, getProducts);
   yield takeLatest(ADD_PRODUCT, addProduct);
   yield takeLatest(UPDATE_PRODUCT, updateProduct);
+  yield takeLatest(DELETE_PRODUCT, deleteProduct);
 }

@@ -27,7 +27,13 @@ import {
   makeSelectDropboxImages,
   makeSelectDropboxVideo,
 } from './selectors';
-import { initFiles, getDropboxFiles, uploadFile, getProduct } from './actions';
+import {
+  initFiles,
+  getDropboxFiles,
+  uploadFile,
+  getProduct,
+  deleteFile,
+} from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -56,6 +62,7 @@ function ProductDetail({
   onUploadFile,
   onInitFiles,
   onGetDropboxFiles,
+  onDeleteFile,
   onPrev,
   onNext,
 }) {
@@ -153,6 +160,7 @@ function ProductDetail({
                     className={classes.fab}
                     component="span"
                     size="small"
+                    onClick={() => onDeleteFile(image.filePath, productId)}
                   >
                     <DeleteIcon />
                   </Fab>
@@ -197,6 +205,7 @@ function ProductDetail({
                   className={classes.fab}
                   component="span"
                   size="small"
+                  onClick={() => onDeleteFile(dropboxVideo.filePath, productId)}
                 >
                   <DeleteIcon />
                 </Fab>
@@ -236,6 +245,7 @@ function ProductDetail({
         <Box display="flex" xs={12} my={3}>
           <Box flexGrow={1}>
             <Fab
+              color="primary"
               variant="extended"
               aria-label="Delete"
               className={classes.fab}
@@ -246,6 +256,7 @@ function ProductDetail({
           </Box>
           <Box>
             <Fab
+              color="primary"
               variant="extended"
               aria-label="Delete"
               className={classes.fab}
@@ -270,6 +281,7 @@ ProductDetail.propTypes = {
   onUploadFile: PropTypes.func,
   onInitFiles: PropTypes.func,
   onGetDropboxFiles: PropTypes.func,
+  onDeleteFile: PropTypes.func,
   onPrev: PropTypes.func,
   onNext: PropTypes.func,
 };
@@ -288,6 +300,8 @@ function mapDispatchToProps(dispatch) {
     onUploadFile: (file, productId) => dispatch(uploadFile(file, productId)),
     onInitFiles: () => dispatch(initFiles()),
     onGetDropboxFiles: productId => dispatch(getDropboxFiles(productId)),
+    onDeleteFile: (filePath, productId) =>
+      dispatch(deleteFile(filePath, productId)),
     onPrev: () => dispatch(push('/')),
     onNext: () => dispatch(push('/userinfo')),
   };

@@ -25,6 +25,9 @@ import {
   UPDATE_PRODUCT,
   UPDATE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_ERROR,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_ERROR,
 } from './constants';
 
 export function loadProducts() {
@@ -84,6 +87,33 @@ export function productUpdated(product) {
 export function productUpdatingError(error) {
   return {
     type: UPDATE_PRODUCT_ERROR,
+    error,
+  };
+}
+
+export function deleteProduct(productId) {
+  return {
+    type: DELETE_PRODUCT,
+    productId,
+  };
+}
+
+export function deleteProductSuccess(
+  productId,
+  deletedProduct,
+  deletedDropboxProduct,
+) {
+  return {
+    type: DELETE_PRODUCT_SUCCESS,
+    productId,
+    deletedProduct,
+    deletedDropboxProduct,
+  };
+}
+
+export function deleteProductError(error) {
+  return {
+    type: DELETE_PRODUCT_ERROR,
     error,
   };
 }

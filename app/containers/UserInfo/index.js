@@ -155,6 +155,7 @@ function UserInfo({ products, onPostUserInfo, onPrev }) {
         <Box display="flex" xs={12} my={3}>
           <Box flexGrow={1}>
             <Fab
+              color="primary"
               variant="extended"
               aria-label="Delete"
               className={classes.fab}

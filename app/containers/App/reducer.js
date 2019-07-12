@@ -16,6 +16,9 @@ import {
   UPLOAD_FILE_ERROR,
   GET_DROPBOX_FILES_ERROR,
   GET_DROPBOX_FILES_SUCCESS,
+  DELETE_FILE,
+  DELETE_FILE_SUCCESS,
+  DELETE_FILE_ERROR,
 } from 'containers/ProductDetail/constants';
 import {
   LOAD_PRODUCTS,
@@ -24,6 +27,9 @@ import {
   ADD_PRODUCT,
   ADD_PRODUCT_SUCCESS,
   ADD_PRODUCT_ERROR,
+  DELETE_PRODUCT,
+  DELETE_PRODUCT_SUCCESS,
+  DELETE_PRODUCT_ERROR,
 } from './constants';
 
 // The initial state of the App
@@ -74,6 +80,8 @@ const appReducer = (state = initialState, action) =>
       case GET_PRODUCT:
       case UPLOAD_FILE:
       case GET_DROPBOX_FILES:
+      case DELETE_PRODUCT:
+      case DELETE_FILE:
         draft.loading = true;
         break;
 
@@ -81,6 +89,10 @@ const appReducer = (state = initialState, action) =>
       case UPLOAD_FILE_ERROR:
       case GET_DROPBOX_FILES_SUCCESS:
       case GET_DROPBOX_FILES_ERROR:
+      case DELETE_PRODUCT_SUCCESS:
+      case DELETE_PRODUCT_ERROR:
+      case DELETE_FILE_SUCCESS:
+      case DELETE_FILE_ERROR:
         draft.loading = false;
         break;
     }

@@ -5,4 +5,5 @@ module.exports = app => {
   app.route('/api/products').post(Product.post);
   app.route('/api/products').put(Product.put);
   app.route('/api/products/:productId').get(Product.get);
+  app.route('/api/products/:productId').delete(Product.delete);
 };

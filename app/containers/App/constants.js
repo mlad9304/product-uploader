@@ -22,3 +22,8 @@ export const UPDATE_PRODUCT = 'product_uploader/App/UPDATE_PRODUCT';
 export const UPDATE_PRODUCT_SUCCESS =
   'product_uploader/App/UPDATE_PRODUCT_SUCCESS';
 export const UPDATE_PRODUCT_ERROR = 'product_uploader/App/UPDATE_PRODUCT_ERROR';
+
+export const DELETE_PRODUCT = 'product_uploader/App/DELETE_PRODUCT';
+export const DELETE_PRODUCT_SUCCESS =
+  'product_uploader/App/DELETE_PRODUCT_SUCCESS';
+export const DELETE_PRODUCT_ERROR = 'product_uploader/App/DELETE_PRODUCT_ERROR';

@@ -9,6 +9,9 @@ import {
   GET_DROPBOX_FILES,
   GET_DROPBOX_FILES_SUCCESS,
   GET_DROPBOX_FILES_ERROR,
+  DELETE_FILE,
+  DELETE_FILE_SUCCESS,
+  DELETE_FILE_ERROR,
 } from './constants';
 
 export function initFiles() {
@@ -77,6 +80,28 @@ export function getDropboxFilesSuccess(dropboxFiles) {
 export function getDropboxFilesError(error) {
   return {
     type: GET_DROPBOX_FILES_ERROR,
+    error,
+  };
+}
+
+export function deleteFile(filePath, productId) {
+  return {
+    type: DELETE_FILE,
+    filePath,
+    productId,
+  };
+}
+
+export function deleteFileSuccess(file) {
+  return {
+    type: DELETE_FILE_SUCCESS,
+    file,
+  };
+}
+
+export function deleteFileError(error) {
+  return {
+    type: DELETE_FILE_ERROR,
     error,
   };
 }

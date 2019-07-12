@@ -15,6 +15,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Box from '@material-ui/core/Box';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { push } from 'connected-react-router';
 
 import { useInjectReducer } from 'utils/injectReducer';
@@ -28,6 +29,7 @@ import {
   loadProducts,
   addProduct,
   updateProduct,
+  deleteProduct,
 } from 'containers/App/actions';
 import ProductList from './components/ProductList';
 import { changeSelectedProductId } from './actions';
@@ -56,6 +58,7 @@ export function HomePage({
   onChangeSelectedProductId,
   onAddProduct,
   onUpdateProduct,
+  onDeleteProduct,
   onNext,
 }) {
   useInjectReducer({ key, reducer });
@@ -81,6 +84,7 @@ export function HomePage({
             <Box display="flex" xs={12}>
               <Box flexGrow={1}>
                 <Fab
+                  color="primary"
                   variant="extended"
                   aria-label="Delete"
                   className={classes.fab}
@@ -92,8 +96,18 @@ export function HomePage({
               </Box>
               <Box>
                 <Fab
-                  variant="extended"
+                  color="secondary"
                   aria-label="Delete"
+                  className={classes.fab}
+                  component="span"
+                  size="medium"
+                  onClick={() => onDeleteProduct(selectedProductId)}
+                >
+                  <DeleteIcon />
+                </Fab>
+                <Fab
+                  color="primary"
+                  variant="extended"
                   className={classes.fab}
                   onClick={() => onNext(selectedProductId)}
                 >
@@ -115,6 +129,7 @@ HomePage.propTypes = {
   onChangeSelectedProductId: PropTypes.func,
   onAddProduct: PropTypes.func,
   onUpdateProduct: PropTypes.func,
+  onDeleteProduct: PropTypes.func,
   onNext: PropTypes.func,
 };
 
@@ -134,6 +149,9 @@ export function mapDispatchToProps(dispatch) {
       dispatch(changeSelectedProductId(event.target.value)),
     onAddProduct: () => dispatch(addProduct()),
     onUpdateProduct: product => dispatch(updateProduct(product)),
+    onDeleteProduct: productId => {
+      if (productId && productId !== '') dispatch(deleteProduct(productId));
+    },
     onNext: productId => {
       if (productId && productId !== '')
         dispatch(push(`/products/${productId}`));

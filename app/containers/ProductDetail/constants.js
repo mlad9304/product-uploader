@@ -18,3 +18,9 @@ export const GET_DROPBOX_FILES_SUCCESS =
   'product_uploader/ProductDetail/GET_DROPBOX_FILES_SUCCESS';
 export const GET_DROPBOX_FILES_ERROR =
   'product_uploader/ProductDetail/GET_DROPBOX_FILES_ERROR';
+
+export const DELETE_FILE = 'product_uploader/ProductDetail/DELETE_FILE';
+export const DELETE_FILE_SUCCESS =
+  'product_uploader/ProductDetail/DELETE_FILE_SUCCESS';
+export const DELETE_FILE_ERROR =
+  'product_uploader/ProductDetail/DELETE_FILE_ERROR';
