@@ -17,11 +17,18 @@ import CardMedia from '@material-ui/core/CardMedia';
 import { Player } from 'video-react';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import TextField from '@material-ui/core/TextField';
 
 import { useInjectReducer } from 'utils/injectReducer';
 import { useInjectSaga } from 'utils/injectSaga';
 
-import { makeSelectLoading, makeSelectError } from '../App/selectors';
+import { Grid } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import {
+  makeSelectLoading,
+  makeSelectError,
+  makeSelectProducts,
+} from '../App/selectors';
 import {
   makeSelectProductDetailInfo,
   makeSelectDropboxImages,
@@ -43,12 +50,22 @@ const useStyles = makeStyles(theme => ({
   media: {
     height: 300,
   },
-  fab: {},
+  header: {
+    fontWeight: 'bold',
+    fontSize: '24px',
+  },
+  fab: {
+    marginRight: theme.spacing(1),
+  },
   btnIcon: {
     marginRight: theme.spacing(1),
   },
   input: {
     display: 'none',
+  },
+  button: {
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(1),
   },
 }));
 
@@ -58,6 +75,7 @@ function ProductDetail({
   match,
   dropboxImages,
   dropboxVideo,
+  products,
   onGetProduct,
   onUploadFile,
   onInitFiles,
@@ -120,15 +138,36 @@ function ProductDetail({
   return (
     <div>
       <GridList
-        cellHeight={360}
+        cellHeight={460}
         className={classes.gridList}
         cols={columns}
         spacing={10}
       >
         <GridListTile key="Subheader" style={{ height: 'auto' }} cols={columns}>
-          <ListSubheader component="div">
+          <ListSubheader component="div" className={classes.header}>
             {info && info.productName}
           </ListSubheader>
+          <Box display="flex" xs={12}>
+            <Box flexGrow={1}>
+              <TextField
+                label="Product Description"
+                margin="dense"
+                variant="outlined"
+                multiline
+                rowsMax="4"
+                fullWidth
+              />
+            </Box>
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Save
+              </Button>
+            </Box>
+          </Box>
         </GridListTile>
         {dropboxImages &&
           dropboxImages.map(image => (
@@ -136,35 +175,58 @@ function ProductDetail({
               <Card className={classes.card}>
                 <CardMedia className={classes.media} image={image.link} />
                 <CardActions>
-                  <input
-                    accept="image/*"
-                    className={classes.input}
-                    type="file"
-                    id={`button-file-${image.id}`}
-                    onChange={handleCapture}
-                  />
-                  <label htmlFor={`button-file-${image.id}`}>
+                  <Grid item xs={12}>
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      type="file"
+                      id={`button-file-${image.id}`}
+                      onChange={handleCapture}
+                    />
+                    <label htmlFor={`button-file-${image.id}`}>
+                      <Fab
+                        color="primary"
+                        aria-label="Add"
+                        className={classes.fab}
+                        component="span"
+                        size="small"
+                      >
+                        <AddIcon />
+                      </Fab>
+                    </label>
                     <Fab
-                      color="primary"
-                      aria-label="Add"
+                      color="secondary"
+                      aria-label="Delete"
                       className={classes.fab}
                       component="span"
                       size="small"
+                      onClick={() => onDeleteFile(image.filePath, productId)}
                     >
-                      <AddIcon />
+                      <DeleteIcon />
                     </Fab>
-                  </label>
-                  <Fab
-                    color="secondary"
-                    aria-label="Delete"
-                    className={classes.fab}
-                    component="span"
-                    size="small"
-                    onClick={() => onDeleteFile(image.filePath, productId)}
-                  >
-                    <DeleteIcon />
-                  </Fab>
+                  </Grid>
                 </CardActions>
+                <Box display="flex" xs={12}>
+                  <Box flexGrow={1}>
+                    <TextField
+                      label="Image Description"
+                      margin="dense"
+                      variant="outlined"
+                      multiline
+                      rowsMax="2"
+                      fullWidth
+                    />
+                  </Box>
+                  <Box>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </Box>
               </Card>
             </GridListTile>
           ))}
@@ -210,6 +272,27 @@ function ProductDetail({
                   <DeleteIcon />
                 </Fab>
               </CardActions>
+              <Box display="flex" xs={12}>
+                <Box flexGrow={1}>
+                  <TextField
+                    label="Video Description"
+                    margin="dense"
+                    variant="outlined"
+                    multiline
+                    rowsMax="2"
+                    fullWidth
+                  />
+                </Box>
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                  >
+                    Save
+                  </Button>
+                </Box>
+              </Box>
             </Card>
           </GridListTile>
         )}
@@ -260,7 +343,7 @@ function ProductDetail({
               variant="extended"
               aria-label="Delete"
               className={classes.fab}
-              onClick={onNext}
+              onClick={() => onNext(products, productId)}
             >
               Next
             </Fab>
@@ -277,6 +360,7 @@ ProductDetail.propTypes = {
   dropboxVideo: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   width: PropTypes.string,
   match: PropTypes.object,
+  products: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
   onGetProduct: PropTypes.func,
   onUploadFile: PropTypes.func,
   onInitFiles: PropTypes.func,
@@ -292,6 +376,7 @@ const mapStateToProps = createStructuredSelector({
   error: makeSelectError(),
   dropboxImages: makeSelectDropboxImages(),
   dropboxVideo: makeSelectDropboxVideo(),
+  products: makeSelectProducts(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -303,7 +388,26 @@ function mapDispatchToProps(dispatch) {
     onDeleteFile: (filePath, productId) =>
       dispatch(deleteFile(filePath, productId)),
     onPrev: () => dispatch(push('/')),
-    onNext: () => dispatch(push('/userinfo')),
+    onNext: (products, productId) => {
+      if (products && products.length > 1) {
+        const currentIndex = products
+          // eslint-disable-next-line no-underscore-dangle
+          .map(product => product._id)
+          .indexOf(productId);
+        if (currentIndex === products.length - 1) {
+          dispatch(push('/userinfo'));
+        } else {
+          const nextProduct = products[currentIndex + 1];
+          const { _id: nextProductId } = nextProduct;
+          dispatch(push(`/products/${nextProductId}`));
+          dispatch(initFiles());
+          dispatch(getProduct(nextProductId));
+          dispatch(getDropboxFiles(nextProductId));
+        }
+      } else {
+        dispatch(push('/userinfo'));
+      }
+    },
   };
 }
 
